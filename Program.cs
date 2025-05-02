@@ -3,24 +3,36 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<DataContext>(opt => {
-opt.UseSqlite (builder.Configuration.GetConnectionString("DefaultConnection"));
 
-});
+// Only one DbContext registration is needed
+builder.Services.AddDbContext<DataContext>(opt =>
+    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlite("Data Source=dating.db"));
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors();
 
 var app = builder.Build();
 
+// Enable Swagger UI in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(); // Optional: pass options here if needed
+}
 
-// Configure the HTTP request pipeline.
+app.UseCors(x => x
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
-
+app.UseHttpsRedirection();
+app.UseAuthorization();
 
 app.MapControllers();
 
