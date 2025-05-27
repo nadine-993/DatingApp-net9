@@ -1,0 +1,8 @@
+.dropdown-toggle, dropdown-item{
+    cursor:pointer;
+    
+}
+.btn {
+    width: 200px;
+    max-width: 100%;
+}
