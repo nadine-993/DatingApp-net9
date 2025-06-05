@@ -10,11 +10,15 @@
       "url": "http://localhost:4200/"
     },
     {
-      "name": "ng test",
-      "type": "chrome",
+      "name": ".Net Core Attach",
+      "type": "coreclr",
+      "request": "attach", 
+        },
+    {
+      "name": "C#: Api Debug",
+      "type": "dotnet",
       "request": "launch",
-      "preLaunchTask": "npm: test",
-      "url": "http://localhost:9876/debug.html"
+      "preLaunchTask": "npm: test"
     }
   ]
 }
