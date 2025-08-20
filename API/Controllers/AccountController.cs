@@ -45,8 +45,10 @@ public class AccountController(DataContext context, ITokenService tokenService) 
 
     {
 
-        var user = await context.Users.FirstOrDefaultAsync(x =>
-        x.UserName == loginDto.Username.ToLower());
+        var user = await context.Users
+        .Include(p => p.Photos)
+          .FirstOrDefaultAsync(x =>
+            x.UserName == loginDto.Username.ToLower());
 
         if (user == null) return Unauthorized("Invald username");
 
@@ -57,10 +59,10 @@ public class AccountController(DataContext context, ITokenService tokenService) 
             if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Pssword");
         }
            return new UserDto
-        {
-            Username = user.UserName,
-            Token = tokenService.CreateToken(user)
-
+           {
+               Username = user.UserName,
+               Token = tokenService.CreateToken(user),
+               PhotoUrl=user.Photos.FirstOrDefault(x=> x.IsMain)?.url
 
         };
 
